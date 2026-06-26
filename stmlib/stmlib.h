@@ -81,6 +81,14 @@ namespace impl {
 #define IN_RAM
 #endif  // TEST
 
+// MSVC does not understand GCC/Clang's __attribute__((always_inline)); make the
+// always-inline hint portable (no-op on MSVC, unchanged on clang/gcc).
+#if defined(_MSC_VER)
+#define STMLIB_ALWAYS_INLINE
+#else
+#define STMLIB_ALWAYS_INLINE __attribute__((always_inline))
+#endif
+
 #define UNROLL2(x) x; x;
 #define UNROLL4(x) x; x; x; x;
 #define UNROLL8(x) x; x; x; x; x; x; x; x;
