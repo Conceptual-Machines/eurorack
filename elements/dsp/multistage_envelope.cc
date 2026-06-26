@@ -36,6 +36,16 @@ using namespace std;
 using namespace stmlib;
 
 void MultistageEnvelope::Init() {
+  // On the original hardware this object lives in zero-initialized BSS, so the
+  // segment-array entries past the active ADSR segments read as 0. Off-target
+  // (e.g. in MAGDA's heap-allocated Part) that memory is indeterminate, and the
+  // "done" state (segment_ == num_segments_) reads shape_[segment_] /
+  // level_[segment_ + 1] past what set_adsr() fills -- a garbage shape_ indexes
+  // lookup_table_table out of bounds and crashes Interpolate8. Zero the full
+  // arrays up front to restore the firmware's assumption.
+  std::fill(level_, level_ + kMaxNumSegments, 0.0f);
+  std::fill(time_, time_ + kMaxNumSegments, 0.0f);
+  std::fill(shape_, shape_ + kMaxNumSegments, ENV_SHAPE_LINEAR);
   set_adsr(0, 0.25f, 0.25f, 0.5f);
   segment_ = num_segments_;
   phase_ = 0.0f;
