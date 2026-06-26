@@ -37,11 +37,17 @@ namespace rings {
 
 
 const int16_t* lookup_table_int16_table[] = {
+  NULL,  // Rings defines no int16 LUTs; one NULL entry keeps the array
+         // non-empty so MSVC accepts it (C2466: no zero-size arrays). Never
+         // indexed at runtime, so behaviour is unchanged.
 };
 
 
 
 const uint32_t* lookup_table_uint32_table[] = {
+  NULL,  // Rings defines no uint32 LUTs; one NULL entry keeps the array
+         // non-empty so MSVC accepts it (C2466: no zero-size arrays). Never
+         // indexed at runtime, so behaviour is unchanged.
 };
 
 const float lut_sine[] = {
