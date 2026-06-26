@@ -61,6 +61,7 @@ class Window {
       int32_t start,
       int32_t width,
       int32_t phase_increment) {
+    done_ = false;
     first_sample_ = (start + buffer_size) % buffer_size;
     phase_increment_ = phase_increment;
     phase_ = 0;
