@@ -65,6 +65,14 @@ class NoteFilter {
   inline float Process(float note, bool strum) {
     // If there is a sharp change, follow it instantly.
     if (fabs(note - note_) > 0.4f || strum) {
+      // Carry the pitch being left behind into the delay line, which is
+      // otherwise only written in the steady branch below. Part retunes the
+      // voice it rotates away from to stable_note(), so two strums with no
+      // steady block between them handed that voice a stale value, or zero on
+      // a fresh instance. A CV input cannot strum that fast; a MIDI chord can.
+      for (size_t i = 0; i < 16; ++i) {
+        delayed_stable_note_.Write(stable_note_);
+      }
       stable_note_ = note_ = note;
       coefficient_ = fast_coefficient_;
       stable_coefficient_ = slow_coefficient_;
